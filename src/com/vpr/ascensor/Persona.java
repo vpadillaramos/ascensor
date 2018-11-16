@@ -9,6 +9,7 @@ public class Persona extends Thread{
 	//Atributos
 	private static int cont;
 	private int id;
+	private int plantaSubir, plantaBajar;
 	
 	//Constructor
 	public Persona() {
@@ -19,8 +20,24 @@ public class Persona extends Thread{
 	//Metodos
 	public void run() {
 		try {
-			//Cada persona se para en una planta aleatoria hasta que llegue el ascensor
-			Ascensor.semaforoPlanta[Metodos.intRandom(0, Ascensor.semaforoPlanta.length-1)].acquire();
+			
+			plantaSubir = Metodos.intRandom(0, Ascensor.semaforoEntrarAscensor.length-1);
+			do {
+				plantaBajar = Metodos.intRandom(0, Ascensor.semaforoSalirAscensor.length-1);
+			}while(plantaBajar == plantaSubir);
+			
+			//Espera el ascensor
+			System.out.printf("Persona %d está en la planta %d. Se bajará en la planta %d\n",id, plantaSubir, plantaBajar);
+			Ascensor.semaforoEntrarAscensor[plantaSubir].acquire();
+			
+			//Entra al ascensor y espera su planta para bajar
+			System.out.printf("Persona %d se subió al ascensor en la planta %d\n",id, plantaSubir);
+			Ascensor.semaforoSalirAscensor[plantaBajar].acquire();
+			
+			//Sale del ascensor
+			System.out.printf("Persona %d se baja en planta %d\n",id,plantaBajar);
+			
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
