@@ -7,23 +7,24 @@ public class Principal {
 		
 		//Atributos
 		Ascensor ascensor = new Ascensor();
-		Persona[] persona = new Persona[100];
+		Persona[] persona = new Persona[PERSONAS];
 		
 		//Programa principal
 		ascensor.start();
 		
-		for(int i=0; i<PERSONAS; i++) {
+		for(int i=0; i<persona.length; i++) {
 			persona[i] = new Persona();
 			persona[i].start();
 		}
 		
-		for(int i=0; i<PERSONAS; i++)
+		for(int i=0; i<persona.length; i++)
 			try {
 				persona[i].join();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		
+		//Acabo el hilo del ascensor
 		ascensor.setAcabar(true);
 	}
 }

@@ -34,11 +34,6 @@ public class Ascensor extends Thread{
 					e.printStackTrace();
 				}
 				System.out.printf("[Planta %d] Esperando %d\n",i,semaforoEntrarAscensor[i].getQueueLength());
-				//System.out.printf("contador: %d\n",contCapacidad);
-				/*if(contCapacidad<CAPACIDAD && semaforoPlanta[i].hasQueuedThreads()) {
-					semaforoPlanta[i].release(semaforoPlanta[i].getQueueLength());
-					contCapacidad++;
-				}*/
 				
 				//Compruebo si hay personas esperando a entrar al ascensor
 				
