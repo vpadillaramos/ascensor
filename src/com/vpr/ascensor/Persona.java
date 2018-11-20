@@ -26,10 +26,6 @@ public class Persona extends Thread{
 				plantaBajar = Metodos.intRandom(0, Ascensor.semaforoSalirAscensor.length-1);
 			}while(plantaBajar == plantaSubir); //se debe bajar en una planta diferente a la que se subio
 			
-			if(plantaSubir<plantaBajar)
-				Ascensor.setPrioridad(true);
-			else
-				Ascensor.setPrioridad(false);
 				
 			
 			//Espera el ascensor

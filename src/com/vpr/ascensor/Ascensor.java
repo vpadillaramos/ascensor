@@ -5,7 +5,7 @@ import java.util.concurrent.Semaphore;
 public class Ascensor extends Thread{
 	//Constantes
 	private final int CAPACIDAD = 5;
-	private static final int PLANTAS = 10;
+	private static final int PLANTAS = 5;
 	
 	//Atributos
 	public static Semaphore[] semaforoEntrarAscensor = new Semaphore[PLANTAS]; //1 semaforo por cada planta donde las personas esperan el ascensor
@@ -14,11 +14,6 @@ public class Ascensor extends Thread{
 	public static Semaphore semaforoEsperaPersonaSale = new Semaphore(0);
 	private boolean activo = true;
 	private int contCapacidad,plantaActual;
-	
-	private static int tamPrioridad = 0;
-	private static boolean[] prioridad = new boolean[tamPrioridad]; //true es subir, false bajar
-	private static Semaphore semaforoPrioridad = new Semaphore(1);
-	private static int prioridadActual = 0;
 	
 	
 	
@@ -33,35 +28,10 @@ public class Ascensor extends Thread{
 	
 	//Metodos
 	public void run() {
-		//la primera vez sube siempre ya que empieza en la planta 0
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
-		}
-		
-		//TODO arreglar el maximo de capacidad
-		
-		//la primera vez
-		int primera = damePlantaSubiendo(0);
-		contCapacidad = 0;
-		for(plantaActual=0; plantaActual<=primera; plantaActual++) {
-			try {
-				System.out.printf("[PLANTA %d]\n",plantaActual);
-				Thread.sleep(1500);
-				if(semaforoEntrarAscensor[plantaActual].hasQueuedThreads()) {
-					if(contCapacidad >= CAPACIDAD)
-						System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
-					else {
-						contCapacidad = contCapacidad + semaforoEntrarAscensor[plantaActual].getQueueLength();
-						System.out.printf("capaciad: %d\n",contCapacidad);
-						semaforoEntrarAscensor[plantaActual].release(semaforoEntrarAscensor[plantaActual].getQueueLength());
-						semaforoEsperaPersonaEntra.acquire();
-					}
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 		
 		do {
@@ -71,88 +41,83 @@ public class Ascensor extends Thread{
 				e1.printStackTrace();
 			}
 			
-			for(boolean b:prioridad)
-				System.out.print(b+" ");
-			System.out.println("");
-			
 			//prioridad de subida
-			if(prioridadActual < prioridad.length && prioridad[prioridadActual]) {
-				boolean bucleHecho = false;
-				while(hayPlantaSubiendo(plantaActual) || hayBajadaSubiendo(plantaActual)) {
-					bucleHecho = true;
-					try {
-						System.out.printf("[PLANTA %d]\n",plantaActual);
-						Thread.sleep(1500);
-						//si en la planta actual hay alguien se sube
-						if(semaforoEntrarAscensor[plantaActual].hasQueuedThreads()) {
-							if(contCapacidad >= CAPACIDAD)
-								System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
-							else {
-								contCapacidad = contCapacidad + semaforoEntrarAscensor[plantaActual].getQueueLength();
-								System.out.printf("capaciad: %d\n",contCapacidad);
-								semaforoEntrarAscensor[plantaActual].release(semaforoEntrarAscensor[plantaActual].getQueueLength());
-								semaforoEsperaPersonaEntra.acquire();
-							}
-						}
-							
-						//si hay alguien que se quiera bajar
-						if(semaforoSalirAscensor[plantaActual].hasQueuedThreads()) {
-							contCapacidad = contCapacidad - semaforoSalirAscensor[plantaActual].getQueueLength();
+			boolean bucleHecho = false;
+			while(hayPlantaSubiendo(plantaActual) || hayBajadaSubiendo(plantaActual)) {
+				bucleHecho = true;
+				try {
+					System.out.printf("[PLANTA %d]\n",plantaActual);
+					Thread.sleep(1500);
+
+					//compruebo si hay capacidad en el ascensor
+					if(contCapacidad >= CAPACIDAD)
+						System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
+					else {
+						while(contCapacidad < CAPACIDAD && semaforoEntrarAscensor[plantaActual].hasQueuedThreads()) {
+							contCapacidad++;;
+							semaforoEntrarAscensor[plantaActual].release();
+							semaforoEsperaPersonaEntra.acquire();
 							System.out.printf("capaciad: %d\n",contCapacidad);
-							semaforoSalirAscensor[plantaActual].release(semaforoSalirAscensor[plantaActual].getQueueLength());
-							semaforoEsperaPersonaSale.acquire();
 						}
-							
-						
-						plantaActual++;
-					} catch (InterruptedException e) {
-							e.printStackTrace();
 					}
-				}
-				
-				if(bucleHecho)
-					plantaActual--; //resto 1 ya que sale del bucle con 1 de mas
-			}
-			else {
-				boolean bucleHecho = false;
-				while(hayPlantaBajando(plantaActual) || hayBajadaBajando(plantaActual)) {
-					bucleHecho = true;
-					try {
-						System.out.printf("[PLANTA %d]\n",plantaActual);
-						Thread.sleep(1500);
-						//si en la planta actual hay alguien se sube
-						if(semaforoEntrarAscensor[plantaActual].hasQueuedThreads()) {
-							if(contCapacidad >= CAPACIDAD)
-								System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
-							else {
-								contCapacidad = contCapacidad + semaforoEntrarAscensor[plantaActual].getQueueLength();
-								System.out.printf("capaciad: %d\n",contCapacidad);
-								semaforoEntrarAscensor[plantaActual].release(semaforoEntrarAscensor[plantaActual].getQueueLength());
-								semaforoEsperaPersonaEntra.acquire();
-							}
-						}
-							
-						//si hay alguien que se quiera bajar
-						if(semaforoSalirAscensor[plantaActual].hasQueuedThreads()) {
-							contCapacidad = contCapacidad - semaforoSalirAscensor[plantaActual].getQueueLength();
-							System.out.printf("capaciad: %d\n",contCapacidad);
-							semaforoSalirAscensor[plantaActual].release(semaforoSalirAscensor[plantaActual].getQueueLength());
-							semaforoEsperaPersonaSale.acquire();
-						}
-						
-						
-						plantaActual--;
-					} catch (InterruptedException e) {
-							e.printStackTrace();
+
+					//si hay alguien que se quiera bajar
+					if(semaforoSalirAscensor[plantaActual].hasQueuedThreads()) {
+						contCapacidad = contCapacidad - semaforoSalirAscensor[plantaActual].getQueueLength();
+						System.out.printf("capaciad: %d\n",contCapacidad);
+						semaforoSalirAscensor[plantaActual].release(semaforoSalirAscensor[plantaActual].getQueueLength());
+						semaforoEsperaPersonaSale.acquire();
 					}
+
+
+					plantaActual++;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				if(bucleHecho)
-					plantaActual++; //sumo 1 ya que sale del bucle con 1 de menos
 			}
+
+			if(bucleHecho)
+				plantaActual--; //resto 1 ya que sale del bucle con 1 de mas
 			
-			if(plantaActual >= PLANTAS)
-				plantaActual--;
-			prioridadActual++;
+			bucleHecho = false;
+			while(hayPlantaBajando(plantaActual) || hayBajadaBajando(plantaActual)) {
+				bucleHecho = true;
+				try {
+					System.out.printf("[PLANTA %d]\n",plantaActual);
+					Thread.sleep(1500);
+
+					//compruebo si hay capacidad en el ascensor
+					if(contCapacidad >= CAPACIDAD)
+						System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
+					else {
+						while(contCapacidad < CAPACIDAD && semaforoEntrarAscensor[plantaActual].hasQueuedThreads()) {
+							contCapacidad++;;
+							semaforoEntrarAscensor[plantaActual].release();
+							semaforoEsperaPersonaEntra.acquire();
+							System.out.printf("capaciad: %d\n",contCapacidad);
+						}
+					}
+
+					//si hay alguien que se quiera bajar
+					if(semaforoSalirAscensor[plantaActual].hasQueuedThreads()) {
+						contCapacidad = contCapacidad - semaforoSalirAscensor[plantaActual].getQueueLength();
+						System.out.printf("capaciad: %d\n",contCapacidad);
+						semaforoSalirAscensor[plantaActual].release(semaforoSalirAscensor[plantaActual].getQueueLength());
+						semaforoEsperaPersonaSale.acquire();
+					}
+
+
+					plantaActual--;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			if(bucleHecho)
+				plantaActual++; //sumo 1 ya que sale del bucle con 1 de menos
+
+			
+			/*if(plantaActual >= PLANTAS)
+				plantaActual--;*/
 			
 		}while(activo);
 	}
@@ -164,23 +129,6 @@ public class Ascensor extends Thread{
 	
 	public boolean isActivo() {
 		return activo;
-	}
-	
-	public static void setPrioridad(boolean b) {
-		try {
-			semaforoPrioridad.acquire();
-			
-			boolean[] aux = new boolean[prioridad.length];
-			System.arraycopy(prioridad, 0, aux, 0, prioridad.length);
-			tamPrioridad++;
-			prioridad = new boolean[tamPrioridad];
-			System.arraycopy(aux, 0, prioridad, 0, aux.length);
-			prioridad[prioridad.length-1] = b;
-			
-			semaforoPrioridad.release();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	//devuelve la planta siguiente en sentido de subida a partir de una posicion indicada
