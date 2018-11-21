@@ -2,10 +2,13 @@ package com.vpr.ascensor;
 
 import java.util.concurrent.Semaphore;
 
+import com.vpr.grafico.ObjAscensor;
+
 public class Ascensor extends Thread{
 	//Constantes
 	private final int CAPACIDAD = 5;
-	private static final int PLANTAS = 5;
+	private static final int PLANTAS = 7; //*****MAXIMO DE PLANTAS PARA LA INTERFAZ GRAFICA******
+	private final int TIEMPO_MOVIMIENTO = 3000;
 	
 	//Atributos
 	public static Semaphore[] semaforoEntrarAscensor = new Semaphore[PLANTAS]; //1 semaforo por cada planta donde las personas esperan el ascensor
@@ -14,6 +17,7 @@ public class Ascensor extends Thread{
 	public static Semaphore semaforoEsperaPersonaSale = new Semaphore(0);
 	private boolean activo = true;
 	private int contCapacidad,plantaActual;
+	private int aux = 0;
 	
 	
 	
@@ -43,11 +47,15 @@ public class Ascensor extends Thread{
 			
 			//prioridad de subida
 			boolean bucleHecho = false;
+			aux = plantaActual;
 			while(hayPlantaSubiendo(plantaActual) || hayBajadaSubiendo(plantaActual)) {
 				bucleHecho = true;
 				try {
 					System.out.printf("[PLANTA %d]\n",plantaActual);
-					Thread.sleep(1500);
+					if(plantaActual != aux)
+						ObjAscensor.subir();
+					Thread.sleep(TIEMPO_MOVIMIENTO);
+					ObjAscensor.preparaAscensor();
 
 					//compruebo si hay capacidad en el ascensor
 					if(contCapacidad >= CAPACIDAD)
@@ -57,6 +65,7 @@ public class Ascensor extends Thread{
 							contCapacidad++;;
 							semaforoEntrarAscensor[plantaActual].release();
 							semaforoEsperaPersonaEntra.acquire();
+							
 							System.out.printf("capaciad: %d\n",contCapacidad);
 						}
 					}
@@ -80,11 +89,15 @@ public class Ascensor extends Thread{
 				plantaActual--; //resto 1 ya que sale del bucle con 1 de mas
 			
 			bucleHecho = false;
+			aux = plantaActual;
 			while(hayPlantaBajando(plantaActual) || hayBajadaBajando(plantaActual)) {
 				bucleHecho = true;
 				try {
 					System.out.printf("[PLANTA %d]\n",plantaActual);
-					Thread.sleep(1500);
+					if(plantaActual != aux)
+						ObjAscensor.bajar();
+					Thread.sleep(TIEMPO_MOVIMIENTO);
+					ObjAscensor.preparaAscensor();
 
 					//compruebo si hay capacidad en el ascensor
 					if(contCapacidad >= CAPACIDAD)

@@ -1,5 +1,7 @@
 package com.vpr.ascensor;
 
+import com.vpr.grafico.Interfaz;
+
 public class Principal {
 	public static void main(String[] args) {
 		//Constantes
@@ -10,7 +12,21 @@ public class Principal {
 		Persona[] persona = new Persona[PERSONAS];
 		
 		//Programa principal
+		Interfaz interfaz = new Interfaz();
+		
 		ascensor.start();
+		
+		/*try {
+			interfaz.subir();
+			
+			Thread.sleep(2000);
+			interfaz.preparaAscensor();
+			Thread.sleep(2000);
+			
+			interfaz.bajar();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
 		
 		do {
 			//cont++;

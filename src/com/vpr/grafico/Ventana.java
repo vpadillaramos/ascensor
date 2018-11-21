@@ -2,6 +2,7 @@ package com.vpr.grafico;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
