@@ -2,6 +2,7 @@ package com.vpr.ascensor;
 
 import java.util.concurrent.Semaphore;
 
+import com.vpr.grafico.Aforo;
 import com.vpr.grafico.ObjAscensor;
 
 public class Ascensor extends Thread{
@@ -62,18 +63,19 @@ public class Ascensor extends Thread{
 						System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
 					else {
 						while(contCapacidad < CAPACIDAD && semaforoEntrarAscensor[plantaActual].hasQueuedThreads()) {
-							contCapacidad++;;
+							contCapacidad++;
 							semaforoEntrarAscensor[plantaActual].release();
 							semaforoEsperaPersonaEntra.acquire();
-							
-							System.out.printf("capaciad: %d\n",contCapacidad);
+							Aforo.setAforo(contCapacidad);
+							System.out.printf("Personas dentro: %d\n",contCapacidad);
 						}
 					}
 
 					//si hay alguien que se quiera bajar
 					if(semaforoSalirAscensor[plantaActual].hasQueuedThreads()) {
 						contCapacidad = contCapacidad - semaforoSalirAscensor[plantaActual].getQueueLength();
-						System.out.printf("capaciad: %d\n",contCapacidad);
+						Aforo.setAforo(contCapacidad);
+						System.out.printf("Personas dentro: %d\n",contCapacidad);
 						semaforoSalirAscensor[plantaActual].release(semaforoSalirAscensor[plantaActual].getQueueLength());
 						semaforoEsperaPersonaSale.acquire();
 					}
@@ -104,17 +106,19 @@ public class Ascensor extends Thread{
 						System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
 					else {
 						while(contCapacidad < CAPACIDAD && semaforoEntrarAscensor[plantaActual].hasQueuedThreads()) {
-							contCapacidad++;;
+							contCapacidad++;
 							semaforoEntrarAscensor[plantaActual].release();
 							semaforoEsperaPersonaEntra.acquire();
-							System.out.printf("capaciad: %d\n",contCapacidad);
+							Aforo.setAforo(contCapacidad);
+							System.out.printf("Personas dentro: %d\n",contCapacidad);
 						}
 					}
 
 					//si hay alguien que se quiera bajar
 					if(semaforoSalirAscensor[plantaActual].hasQueuedThreads()) {
 						contCapacidad = contCapacidad - semaforoSalirAscensor[plantaActual].getQueueLength();
-						System.out.printf("capaciad: %d\n",contCapacidad);
+						Aforo.setAforo(contCapacidad);
+						System.out.printf("Personas dentro: %d\n",contCapacidad);
 						semaforoSalirAscensor[plantaActual].release(semaforoSalirAscensor[plantaActual].getQueueLength());
 						semaforoEsperaPersonaSale.acquire();
 					}
@@ -127,11 +131,6 @@ public class Ascensor extends Thread{
 			}
 			if(bucleHecho)
 				plantaActual++; //sumo 1 ya que sale del bucle con 1 de menos
-
-			
-			/*if(plantaActual >= PLANTAS)
-				plantaActual--;*/
-			
 		}while(activo);
 	}
 	

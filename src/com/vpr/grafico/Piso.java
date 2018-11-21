@@ -18,7 +18,7 @@ class Piso extends Objeto{
 	public void render(Graphics g) {
 		g.setColor(Color.WHITE);
 		//g.fillRect(x, y, Interfaz.WIDTH - 30, 8);
-		g.fillRect(x, y, Interfaz.WIDTH - 30, 8);
+		g.fillRect(x, y, Interfaz.WIDTH - 70, 8);
 	}
 
 }

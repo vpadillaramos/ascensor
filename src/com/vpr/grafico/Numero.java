@@ -1,22 +1,20 @@
 package com.vpr.grafico;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-public class Edificio extends Objeto{
+public class Numero extends Objeto{
+	
 	//Atributos
 	private Image imagen;
 	private ImageIcon i;
 	
-	//Constructor
-	public Edificio(int x, int y, ID id) {
+	public Numero(int x, int y, ID id, int numero) {
 		super(x, y, id);
 		
-		//imagen
-		i = new ImageIcon("..\\Ascensor\\res\\edificio.png");
+		i = new ImageIcon("..\\Ascensor\\res\\piso"+numero+".png");
 		imagen = i.getImage();
 	}
 
@@ -27,7 +25,7 @@ public class Edificio extends Objeto{
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(imagen, x, y, 150, Interfaz.HEIGHT - 20, null);
+		g.drawImage(imagen, x, y, 70, 50, null);
 	}
 
 }

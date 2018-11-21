@@ -1,30 +1,17 @@
 package com.vpr.grafico;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 
-import javax.swing.ImageIcon;
-
-
-public class ObjAscensor extends Objeto{
-	//Constantes
+public class Aforo extends Objeto{
 	
 	//Atributos
-	private Image imagen;
-	private ImageIcon i;
 	public static int cont;
 	private static boolean SUBIR = false;
 	private static boolean BAJAR = false;
+	private static String aforo = "0";
 	
-	public ObjAscensor(int x, int y, ID id) {
+	public Aforo(int x, int y, ID id) {
 		super(x, y, id);
-		
-		//imagen
-		i = new ImageIcon("..\\Ascensor\\res\\ascensor2.png");
-		imagen = i.getImage();
-		
-		//velocidad
 		velY = 1;
 	}
 
@@ -41,21 +28,19 @@ public class ObjAscensor extends Objeto{
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(imagen, x, y, 100, 100, null);
+		g.drawString(aforo, x, y);
 	}
 	
 	public void subePiso() {
 		if(cont >= 90) {
 			velY *= 0;
 			SUBIR = false;
-			Aforo.preparaAforo();
 		}
 		else {
 			SUBIR = true;
 			velY = 1;
 			y -= velY;
 			cont++;
-			Aforo.subir();
 		}
 	}
 	
@@ -63,14 +48,12 @@ public class ObjAscensor extends Objeto{
 		if(cont >= 90) {
 			BAJAR = false;
 			velY *= 0;
-			Aforo.preparaAforo();
 		}
 		else {
 			BAJAR = true;
 			velY = 1;
 			y += velY;
 			cont++;
-			Aforo.bajar();
 		}
 	}
 	
@@ -82,10 +65,14 @@ public class ObjAscensor extends Objeto{
 		BAJAR = true;
 	}
 	
-	public static void preparaAscensor() {
+	public static void preparaAforo() {
 		SUBIR = false;
 		BAJAR = false;
 		cont = 0;
+	}
+	
+	public static void setAforo(int personas) {
+		aforo = String.valueOf(personas);
 	}
 
 }

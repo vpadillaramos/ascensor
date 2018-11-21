@@ -10,12 +10,11 @@ import java.awt.image.BufferStrategy;
 public class Interfaz extends Canvas implements Runnable{
 	//Constantes
 	public static Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-	public static final int WIDTH = (int) d.getWidth()-30; //640
-	public static final int HEIGHT = (int) (d.getHeight()-50); //WIDTH/12*9
+	public static final int WIDTH = 980; //640
+	public static final int HEIGHT = 735; //WIDTH/12*9
 	
 	//Atirbutos
 	private static final long serialVersionUID = 2601176506843040199L;
-	private boolean SUBIR_BAJAR = false;
 	private Thread thread;
 	private boolean running = false;
 	
@@ -25,16 +24,30 @@ public class Interfaz extends Canvas implements Runnable{
 	public Interfaz() {
 		new Ventana("Ascensor", this, WIDTH, HEIGHT);
 		handler = new Handler();
-		handler.addObjeto(new ObjAscensor(23, 560, ID.Ascensor)); //añadir el objeto ascensor //560 470
-		handler.addObjeto(new Edificio(0, 0, ID.Edificio));
-		handler.addObjeto(new Piso(20, HEIGHT-70, ID.Piso));
-		handler.addObjeto(new Piso(20, HEIGHT-160, ID.Piso));
-		handler.addObjeto(new Piso(20, HEIGHT-250, ID.Piso));
-		handler.addObjeto(new Piso(20, HEIGHT-340, ID.Piso));
-		handler.addObjeto(new Piso(20, HEIGHT-430, ID.Piso));
-		handler.addObjeto(new Piso(20, HEIGHT-520, ID.Piso));
-		handler.addObjeto(new Piso(20, HEIGHT-610, ID.Piso));
-		handler.addObjeto(new Piso(20, HEIGHT-700, ID.Piso));
+		handler.addObjeto(new ObjAscensor(43, HEIGHT-160, ID.Ascensor)); //añadir el objeto ascensor //560 470
+		handler.addObjeto(new Edificio(20, 0, ID.Edificio));
+		addPisos();
+		addNumeros();
+		handler.addObjeto(new Aforo(90, HEIGHT-100, ID.Aforo));
+		
+		/*
+		//piso 0
+		handler.addObjeto(new ObjPersona(140, HEIGHT-115, ID.Persona, true));
+		handler.addObjeto(new ObjPersona(160, HEIGHT-115, ID.Persona, true));
+		handler.addObjeto(new ObjPersona(140, HEIGHT-150, ID.Persona, false));
+		handler.addObjeto(new ObjPersona(160, HEIGHT-150, ID.Persona, false));
+		
+		//piso 1
+		handler.addObjeto(new ObjPersona(140, HEIGHT-205, ID.Persona, true));
+		handler.addObjeto(new ObjPersona(160, HEIGHT-205, ID.Persona, true));
+		handler.addObjeto(new ObjPersona(140, HEIGHT-240, ID.Persona, false));
+		handler.addObjeto(new ObjPersona(160, HEIGHT-240, ID.Persona, false));*/
+		
+		for(int i = 0; i < 7; i++) {
+			System.out.print(i + " ");
+			addPersonaEsperando(i);
+		}
+		
 	}
 	
 	//Metodos
@@ -116,9 +129,30 @@ public class Interfaz extends Canvas implements Runnable{
 		bs.show();
 	}
 	
-	/*
-	//******MAIN******
-	public static void main(String[] args) {
-		new Interfaz();
-	}*/
+	private void addPisos() {
+		int cont = 90;
+		int inicial = -20;
+		for(int i = 0; i <= 7; i++) {
+			inicial += cont;
+			int altura = HEIGHT-inicial;
+			handler.addObjeto(new Piso(40, altura, ID.Piso));
+		}
+	}
+	
+	private void addNumeros() {
+		int cont = 90;
+		int inicial = 45;
+		for(int i = 0; i < 7; i++) {
+			inicial += cont;
+			int altura = HEIGHT-inicial;
+			handler.addObjeto(new Numero(0, altura, ID.Numero, i));
+		}
+	}
+	
+	public void addPersonaEsperando(int piso) {
+		int aumento = 90 * piso;
+		int x = 140; //esto depende de las personas que haya esperando
+		int y = HEIGHT - (115 + aumento); //esto depende del piso
+		handler.addObjeto(new ObjPersona(x, y, ID.Persona, true));
+	}
 }

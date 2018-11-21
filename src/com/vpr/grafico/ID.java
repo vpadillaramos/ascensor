@@ -3,5 +3,8 @@ package com.vpr.grafico;
 public enum ID {
 	Ascensor(),
 	Edificio(),
-	Piso();
+	Piso(),
+	Numero(),
+	Aforo(),
+	Persona();
 }
