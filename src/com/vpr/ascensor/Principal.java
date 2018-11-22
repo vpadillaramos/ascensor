@@ -1,8 +1,12 @@
 package com.vpr.ascensor;
 
 import com.vpr.grafico.Interfaz;
+import com.vpr.grafico.ObjPersona;
 
 public class Principal {
+	//Atributos
+	private static Interfaz interfaz;
+	
 	public static void main(String[] args) {
 		//Constantes
 		final int PERSONAS = 5;
@@ -12,35 +16,58 @@ public class Principal {
 		Persona[] persona = new Persona[PERSONAS];
 		
 		//Programa principal
-		Interfaz interfaz = new Interfaz();
+		interfaz = new Interfaz();
 		
 		ascensor.start();
 		
-		/*try {
-			interfaz.subir();
+		for(int i = 0; i < persona.length; i++) {
+			try {
+				persona[i] = new Persona();
+				persona[i].start();
+				Thread.sleep(Metodos.intRandom(2000, 5000));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
-			Thread.sleep(2000);
-			interfaz.preparaAscensor();
-			Thread.sleep(2000);
-			
-			interfaz.bajar();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
+		}
 		
+		for(int i = 0; i < persona.length; i++) {
+			try {
+				persona[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		//Bucle para generar personas de forma indefinida
+		/*
 		do {
-			//cont++;
 			Persona p = new Persona();
 			p.start();
+			
 			try {
 				Thread.sleep(Metodos.intRandom(2000, 5000));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}while(ascensor.isActivo());
+		}while(ascensor.isActivo());*/
 		
 		
 		//Acabo el hilo del ascensor
-		//ascensor.setActivo(true);
+		ascensor.setActivo(false);
+	}
+	
+	public static ObjPersona addPersonaEsperado(int posicionEntrada, int piso) {
+		ObjPersona persona = interfaz.addPersonaEsperando(posicionEntrada, piso);
+		return persona;
+	}
+	
+	public static void removePersona(ObjPersona persona) {
+		interfaz.removePersona(persona);
+	}
+	
+	public static void addPersonaSaliendo(int piso) {
+		interfaz.addPersonaSaliendo(piso);
 	}
 }

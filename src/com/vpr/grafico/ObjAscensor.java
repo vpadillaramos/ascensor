@@ -1,6 +1,5 @@
 package com.vpr.grafico;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -13,7 +12,7 @@ public class ObjAscensor extends Objeto{
 	//Atributos
 	private Image imagen;
 	private ImageIcon i;
-	public static int cont;
+	private static int cont;
 	private static boolean SUBIR = false;
 	private static boolean BAJAR = false;
 	
@@ -23,9 +22,6 @@ public class ObjAscensor extends Objeto{
 		//imagen
 		i = new ImageIcon("..\\Ascensor\\res\\ascensor2.png");
 		imagen = i.getImage();
-		
-		//velocidad
-		velY = 1;
 	}
 
 	@Override

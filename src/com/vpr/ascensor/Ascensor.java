@@ -9,11 +9,17 @@ public class Ascensor extends Thread{
 	//Constantes
 	private final int CAPACIDAD = 5;
 	private static final int PLANTAS = 7; //*****MAXIMO DE PLANTAS PARA LA INTERFAZ GRAFICA******
-	private final int TIEMPO_MOVIMIENTO = 3000;
+	private final int TIEMPO_MOVIMIENTO = 6000;
 	
 	//Atributos
 	public static Semaphore[] semaforoEntrarAscensor = new Semaphore[PLANTAS]; //1 semaforo por cada planta donde las personas esperan el ascensor
-	public static Semaphore[] semaforoSalirAscensor = new Semaphore[PLANTAS];
+	public static Semaphore[] semaforoSalirAscensor = new Semaphore[PLANTAS];  //1 semaforo por cada planta para saber en que planta se baja cada persona
+	/*
+	 - semaforoEsperaPersonaEntra se encarga de esperar a que en la clase Persona se 
+	 imprima el mensaje de salida de la persona, ya que se solapaba con otros mensajes
+	 - semaforoEsperaPersonaSale tiene la misma funcion que el anterior, para que
+	 no se solapen los mensajes
+	 */
 	public static Semaphore semaforoEsperaPersonaEntra = new Semaphore(0);
 	public static Semaphore semaforoEsperaPersonaSale = new Semaphore(0);
 	private boolean activo = true;
@@ -33,12 +39,6 @@ public class Ascensor extends Thread{
 	
 	//Metodos
 	public void run() {
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		
 		do {
 			try {
 				Thread.sleep(5000);
@@ -57,7 +57,7 @@ public class Ascensor extends Thread{
 						ObjAscensor.subir();
 					Thread.sleep(TIEMPO_MOVIMIENTO);
 					ObjAscensor.preparaAscensor();
-
+					//TODO el ascensor se para en todas las plantas aunque no haya nadie
 					//compruebo si hay capacidad en el ascensor
 					if(contCapacidad >= CAPACIDAD)
 						System.out.printf("¡Está lleno! (%d)\n",contCapacidad);

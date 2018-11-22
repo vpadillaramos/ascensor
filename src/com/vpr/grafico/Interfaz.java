@@ -43,10 +43,7 @@ public class Interfaz extends Canvas implements Runnable{
 		handler.addObjeto(new ObjPersona(140, HEIGHT-240, ID.Persona, false));
 		handler.addObjeto(new ObjPersona(160, HEIGHT-240, ID.Persona, false));*/
 		
-		for(int i = 0; i < 7; i++) {
-			System.out.print(i + " ");
-			addPersonaEsperando(i);
-		}
+		
 		
 	}
 	
@@ -149,10 +146,32 @@ public class Interfaz extends Canvas implements Runnable{
 		}
 	}
 	
-	public void addPersonaEsperando(int piso) {
-		int aumento = 90 * piso;
-		int x = 140; //esto depende de las personas que haya esperando
-		int y = HEIGHT - (115 + aumento); //esto depende del piso
-		handler.addObjeto(new ObjPersona(x, y, ID.Persona, true));
+	public ObjPersona addPersonaEsperando(int posicionEntrada, int piso) {
+		int aumentoX = 20 * posicionEntrada;
+		int aumentoY = 90 * piso;
+		int x = 140 + aumentoX; //esto depende de las personas que haya esperando
+		int y = HEIGHT - (115 + aumentoY); //esto depende del piso
+		
+		ObjPersona persona = new ObjPersona(x, y, ID.Persona, true);
+		
+		handler.addObjeto(persona);
+		return persona;
+	}
+	
+	public void removePersona(ObjPersona persona) {
+		handler.removeObjeto(persona);
+	}
+	
+	public void addPersonaSaliendo(int piso) {
+		//int aumentoX = 20 * posicionSalida;
+		int aumentoY = 90 * piso;
+		int x = 140;
+		int y = HEIGHT - (150 + aumentoY);
+		
+		ObjPersona persona = new ObjPersona(x, y, ID.Persona, false);
+		handler.addObjeto(persona);
+		
+		/*if(persona.x >= 150)
+			handler.removeObjeto(persona);*/
 	}
 }
