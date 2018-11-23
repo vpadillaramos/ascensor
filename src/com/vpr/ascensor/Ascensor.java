@@ -40,24 +40,21 @@ public class Ascensor extends Thread{
 	//Metodos
 	public void run() {
 		do {
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			
 			//prioridad de subida
 			boolean bucleHecho = false;
 			aux = plantaActual;
 			while(hayPlantaSubiendo(plantaActual) || hayBajadaSubiendo(plantaActual)) {
 				bucleHecho = true;
 				try {
-					System.out.printf("[PLANTA %d]\n",plantaActual);
+					System.out.printf("\n[PLANTA %d]\n",plantaActual);
 					if(plantaActual != aux)
 						ObjAscensor.subir();
+					
 					Thread.sleep(TIEMPO_MOVIMIENTO);
 					ObjAscensor.preparaAscensor();
 					//TODO el ascensor se para en todas las plantas aunque no haya nadie
+					
+					
 					//compruebo si hay capacidad en el ascensor
 					if(contCapacidad >= CAPACIDAD)
 						System.out.printf("¡Está lleno! (%d)\n",contCapacidad);
@@ -74,8 +71,10 @@ public class Ascensor extends Thread{
 					//si hay alguien que se quiera bajar
 					if(semaforoSalirAscensor[plantaActual].hasQueuedThreads()) {
 						contCapacidad = contCapacidad - semaforoSalirAscensor[plantaActual].getQueueLength();
+						
 						Aforo.setAforo(contCapacidad);
 						System.out.printf("Personas dentro: %d\n",contCapacidad);
+						
 						semaforoSalirAscensor[plantaActual].release(semaforoSalirAscensor[plantaActual].getQueueLength());
 						semaforoEsperaPersonaSale.acquire();
 					}

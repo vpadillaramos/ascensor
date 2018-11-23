@@ -6,5 +6,6 @@ public enum ID {
 	Piso(),
 	Numero(),
 	Aforo(),
-	Persona();
+	Persona(),
+	TextoLLeno();
 }

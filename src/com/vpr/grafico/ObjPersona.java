@@ -42,5 +42,4 @@ public class ObjPersona extends Objeto{
 		velX  = 2;
 		x += velX;
 	}
-
 }

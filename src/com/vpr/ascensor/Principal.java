@@ -9,7 +9,7 @@ public class Principal {
 	
 	public static void main(String[] args) {
 		//Constantes
-		final int PERSONAS = 5;
+		final int PERSONAS = 20;
 		
 		//Atributos
 		Ascensor ascensor = new Ascensor();
@@ -67,7 +67,11 @@ public class Principal {
 		interfaz.removePersona(persona);
 	}
 	
-	public static void addPersonaSaliendo(int piso) {
-		interfaz.addPersonaSaliendo(piso);
+	public static void addPersonaSaliendo(int posicionSalida, int piso) {
+		try {
+			interfaz.addPersonaSaliendo(posicionSalida, piso);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -42,6 +42,7 @@ public class Interfaz extends Canvas implements Runnable{
 		handler.addObjeto(new ObjPersona(160, HEIGHT-205, ID.Persona, true));
 		handler.addObjeto(new ObjPersona(140, HEIGHT-240, ID.Persona, false));
 		handler.addObjeto(new ObjPersona(160, HEIGHT-240, ID.Persona, false));*/
+		handler.addObjeto(new TextoLleno(53, HEIGHT-150, ID.TextoLLeno)); //53 H-150
 		
 		
 		
@@ -80,10 +81,6 @@ public class Interfaz extends Canvas implements Runnable{
 			
 			while(delta >= 1) {
 				tick();
-				/*if(SUBIR_BAJAR)
-					subirPiso();
-				else
-					bajarPiso();*/
 				
 				delta--;
 			}
@@ -162,16 +159,13 @@ public class Interfaz extends Canvas implements Runnable{
 		handler.removeObjeto(persona);
 	}
 	
-	public void addPersonaSaliendo(int piso) {
-		//int aumentoX = 20 * posicionSalida;
+	public void addPersonaSaliendo(int posicionSalida, int piso) throws InterruptedException {
+		int aumentoX = 20 * posicionSalida;
 		int aumentoY = 90 * piso;
-		int x = 140;
+		int x = 140 + aumentoX;
 		int y = HEIGHT - (150 + aumentoY);
 		
 		ObjPersona persona = new ObjPersona(x, y, ID.Persona, false);
 		handler.addObjeto(persona);
-		
-		/*if(persona.x >= 150)
-			handler.removeObjeto(persona);*/
 	}
 }

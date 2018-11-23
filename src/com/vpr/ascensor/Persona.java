@@ -31,8 +31,6 @@ public class Persona extends Thread{
 			//defino la planta donde se subira y donde se bajara de forma aleatoria
 			setPlantas();
 			
-			
-			
 			//Espera el ascensor
 			posicionEntrada = Ascensor.semaforoEntrarAscensor[plantaSubir].getQueueLength();
 			persona = Principal.addPersonaEsperado(posicionEntrada, plantaSubir);
@@ -43,7 +41,7 @@ public class Persona extends Thread{
 			esperarBajada();
 			
 			//Sale del ascensor
-			Principal.addPersonaSaliendo(plantaBajar);
+			
 			salirAscensor();
 			
 			
@@ -69,11 +67,13 @@ public class Persona extends Thread{
 		System.out.printf("Persona %d se subió al ascensor. Pulsa el botón para ir a la planta %d\n",id, plantaBajar);
 		Ventana.consolaPersonaSube("[EN ASCENSOR] Persona " + id + " va a planta " + plantaBajar);
 		Ascensor.semaforoEsperaPersonaEntra.release();
+		posicionSalida = Ascensor.semaforoSalirAscensor[plantaBajar].getQueueLength();
 		Ascensor.semaforoSalirAscensor[plantaBajar].acquire();
 	}
 	
 	private void salirAscensor() {
 		System.out.printf("Persona %d se baja en planta %d\n",id,plantaBajar);
+		Principal.addPersonaSaliendo(posicionSalida, plantaBajar);
 		Ventana.consolaPersonaSale("[SE VA] Persona " + id + " se baja en planta " + plantaBajar);
 		Ascensor.semaforoEsperaPersonaSale.release();
 	}
